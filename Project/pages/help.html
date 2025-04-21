@@ -1,0 +1,14 @@
+
+<h2> <label for="userQuery">What's your query?</label></h2>
+   
+    <input type="text" id="userQuery" placeholder="Enter your query here...">
+    <button onclick="submitQuery()">Submit</button>
+
+    <script>
+        function submitQuery() {
+            var query = document.getElementById("userQuery").value;
+            alert("You asked: " + query);
+        }
+    </script>
+
+

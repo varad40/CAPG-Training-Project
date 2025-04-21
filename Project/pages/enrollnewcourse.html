@@ -1,0 +1,66 @@
+     <h4>Course Enrollment</h4>
+        <form id="enrollForm">
+          <div class="mb-3">
+            <label class="form-label">Student Name</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Select Course</label>
+            <select class="form-select" id="course" required>
+              <option value="">Choose a course</option>
+              <option value="Python Programming">Python Programming</option>
+              <option value="Data Structures and Algorithms">Data Structures and Algorithms</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Machine Learning">Machine Learning</option>
+              <option value="Digital Marketing">Digital Marketing</option>
+              <option value="Cloud Computing">Cloud Computing</option>
+              <option value="Cybersecurity Basics">Cybersecurity Basics</option>
+              <option value="Mobile App Development">Mobile App Development</option>
+              <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+              <option value="Database Management">Database Management</option>
+              <option value="DevOps Fundamentals">DevOps Fundamentals</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Enroll</button>
+        </form>
+      
+
+  <script>
+   form = document.getElementById('enrollForm');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+      var course = document.getElementById('course').value;
+
+      var enrollmentData = {
+        name,
+        email,
+        course,
+        status: "enrolled"
+      };
+
+      fetch('http://localhost:3000/Enrollments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(enrollmentData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(`Enrolled in ${data.course} successfully!`);
+        form.reset();
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Failed to enroll.");
+      });
+    });
+  </script>
+

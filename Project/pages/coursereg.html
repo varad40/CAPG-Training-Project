@@ -1,0 +1,157 @@
+<h2 class="mb-4">Courses</h2>
+<form id="courseForm" class="mb-4">
+  <input type="text" id="courseName" placeholder="Course Name" class="form-control mb-2" required />
+  <input type="text" id="courseDescription" placeholder="Description" class="form-control mb-2" required />
+  <input type="number" id="courseFees" placeholder="Fees" class="form-control mb-2" required />
+  <button id="submitCourseBtn" class="btn btn-primary">Add Course</button>
+</form>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Course Name</th>
+      <th>Description</th>
+      <th>Fees</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="courseTableBody"></tbody>
+</table>
+
+  </div>
+  <script>
+    var courseApi = "http://localhost:3000/Courses";
+    var form = document.getElementById("courseForm");
+    var courseNameInput = document.getElementById("courseName");
+    var descriptionInput = document.getElementById("courseDescription");
+    var feesInput = document.getElementById("courseFees");
+    var submitBtn = document.getElementById("submitCourseBtn");
+    var tbody = document.getElementById("courseTableBody");
+  
+    var allCourses = [];
+    var editId = null;
+    var sortDirection = 1;
+  
+    // Add search input
+    var searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.placeholder = "Search by Course Name...";
+    searchInput.classList.add("form-control", "mb-3");
+    form.parentNode.insertBefore(searchInput, form.nextSibling);
+  
+    searchInput.addEventListener("input", () => {
+      var term = searchInput.value.toLowerCase();
+      var filtered = allCourses.filter(course =>
+        course.coursename.toLowerCase().includes(term)
+      );
+      renderCourses(filtered);
+    });
+  
+    function validate() {
+      var isValid = true;
+      if (courseNameInput.value.trim().length < 3) isValid = false;
+      if (descriptionInput.value.trim().length < 5) isValid = false;
+      if (!feesInput.value || feesInput.value <= 0) isValid = false;
+      return isValid;
+    }
+  
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validate()) return alert("Please fill all fields correctly.");
+  
+      var newCourse = {
+        coursename: courseNameInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        fees: parseFloat(feesInput.value),
+      };
+  
+      if (editId) {
+        fetch(`${courseApi}/${editId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...newCourse, id: editId }),
+        }).then(() => {
+          resetForm();
+          fetchCourses();
+        });
+      } else {
+        fetch(courseApi, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newCourse),
+        }).then(() => {
+          resetForm();
+          fetchCourses();
+        });
+      }
+    });
+  
+    function fetchCourses() {
+      fetch(courseApi)
+        .then(res => res.json())
+        .then(data => {
+          allCourses = data;
+          renderCourses(data);
+        });
+    }
+  
+    function renderCourses(courses) {
+      tbody.innerHTML = "";
+      courses.forEach(course => {
+        var tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${course.id}</td>
+          <td>${course.coursename}</td>
+          <td>${course.description}</td>
+          <td>₹${course.fees}</td>
+          <td>
+              <button class="btn btn-sm btn-outline-primary me-1 edit-btn" data-id="${course.id}">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+      <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${course.id}">
+        <i class="bi bi-trash"></i>
+      </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+  
+      document.querySelectorAll(".edit-btn").forEach(btn =>
+        btn.addEventListener("click", () => loadForEdit(btn.dataset.id))
+      );
+  
+      document.querySelectorAll(".delete-btn").forEach(btn =>
+        btn.addEventListener("click", () => deleteCourse(btn.dataset.id))
+      );
+    }
+  
+    function loadForEdit(id) {
+      fetch(`${courseApi}/${id}`)
+        .then(res => res.json())
+        .then(course => {
+          courseNameInput.value = course.coursename;
+          descriptionInput.value = course.description;
+          feesInput.value = course.fees;
+          editId = id;
+          submitBtn.textContent = "Update Course";
+        });
+    }
+  
+    function deleteCourse(id) {
+      if (confirm("Delete this course?")) {
+        fetch(`${courseApi}/${id}`, { method: "DELETE" }).then(() => fetchCourses());
+      }
+    }
+  
+    function resetForm() {
+      form.reset();
+      editId = null;
+      submitBtn.textContent = "Add Course";
+    }
+  
+   
+    fetchCourses();
+  </script>
+  
+

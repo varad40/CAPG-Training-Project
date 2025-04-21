@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="container my-5">
+    <div>
+      <h2 class="mb-4">Student</h2>
+      <form id="studentForm" class="mb-4">
+        <div class="mb-3">
+          <label for="studentId" class="form-label">Student ID</label>
+          <input type="number" class="form-control" id="studentId" required />
+          <div class="invalid-feedback">Add valid ID</div>
+        </div>
+        <div class="mb-3">
+          <label for="studentName" class="form-label">Student Name</label>
+          <input type="text" class="form-control" id="studentName" required />
+          <div class="invalid-feedback">At least 5 characters required.</div>
+        </div>
+        <div class="mb-3">
+          <label for="studentEmail" class="form-label">Student Email</label>
+          <input type="email" class="form-control" id="studentEmail" required />
+          <div class="invalid-feedback">It should be in correct format</div>
+        </div>
+        <div class="mb-3">
+          <label for="studentPassword" class="form-label"
+            >Student Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="studentPassword"
+            required
+          />
+          <div class="invalid-feedback">It should be in correct format</div>
+        </div>
+        <div class="mb-3">
+          <label for="studentPhone" class="form-label">Student Phone</label>
+          <input
+            type="number"
+            class="form-control"
+            id="studentPhone"
+            required
+          />
+          <div class="invalid-feedback">
+            At least 10 integers required and it should start with 7,8,9
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          Add
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const apiUrl = "http://localhost:3000/Users";
+      const form = document.getElementById("studentForm");
+      const userIdInput = document.getElementById("studentId");
+      const userNameInput = document.getElementById("studentName");
+      const userEmailInput = document.getElementById("studentEmail");
+      const userPasswordInput = document.getElementById("studentPassword");
+      const userPhoneInput = document.getElementById("studentPhone");
+      const submitBtn = document.getElementById("submitBtn");
+      let editId = null;
+      let allStudents = [];
+      let sortDirection = 1;
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!validateForm()) return;
+        const user = {
+          id: userIdInput.value.trim(),
+          name: userNameInput.value.trim(),
+          email: userEmailInput.value.trim(),
+          password: userPasswordInput.value.trim(),
+          phone: userPhoneInput.value.trim(),
+        };
+
+        if (editId) {
+          fetch(`${apiUrl}/${editId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          }).then(() => {
+            fetchUsers();
+            form.reset();
+            editId = null;
+            submitBtn.textContent = "Add Student";
+            clearValidation();
+          });
+        } else {
+          fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user),
+          }).then(() => {
+            fetchUsers();
+            form.reset();
+            clearValidation();
+          });
+        }
+      });
+     
+
+      function fetchUsers() {
+        fetch(`${apiUrl}`)
+          .then((res) => res.json())
+          .then((data) => {
+            allUsers = data;
+          });
+      }
+
+      //Validation
+      const inputs = [userNameInput, userEmailInput, userPasswordInput, userPhoneInput];
+
+      inputs.forEach((input) => {
+        input.addEventListener("blur", () => {
+          validateField(input);
+        });
+      });
+
+      function validateField(input) {
+        let isValid = true;
+        const value = input.value.trim();
+
+        if (input === userNameInput) {
+          isValid = value.length >= 5;
+        } else if (input === userEmailInput) {
+          isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        } else if (input === userPasswordInput) {
+          isValid = value.length >= 8; 
+        } else if (input === userPhoneInput) {
+          isValid = /^\d{10}$/.test(value); 
+        }
+
+        if (isValid) {
+          input.classList.remove("is-invalid");
+          input.classList.add("is-valid");
+        } else {
+          input.classList.add("is-invalid");
+          input.classList.remove("is-valid");
+        }
+
+        return isValid;
+      }
+
+      function validateForm() {
+        let formIsValid = true;
+        inputs.forEach((input) => {
+          if (!validateField(input)) {
+            formIsValid = false;
+          }
+        });
+        return formIsValid;
+      }
+
+      function clearValidation() {
+        userNameInput.classList.remove("is-valid", "is-invalid");
+        userEmailInput.classList.remove("is-valid", "is-invalid");
+        userPasswordInput.classList.remove("is-valid", "is-invalid");
+        userPhoneInput.classList.remove("is-valid", "is-invalid");
+      }
+      
+    </script>
+  </body>
+</html>

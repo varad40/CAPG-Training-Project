@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .sidebar {
+      width: 260px;
+      background-color: #202124;
+      color: white;
+      padding-top: 20px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      display: block;
+      transition: 0.2s;
+    }
+    .sidebar a:hover {
+      background-color: #303134;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .sidebar h4 {
+      padding-left: 20px;
+    }
+    .navbar {
+      background-color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    .navbar .nav-item .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+    .dark-mode {
+      background-color: #121212 !important;
+      color: #e0e0e0 !important;
+    }
+    .dark-mode .navbar {
+      background-color: #1e1e1e !important;
+      border-color: #333;
+    }
+    .dark-mode .dropdown-menu {
+      background-color: #2c2c2c;
+      color: #fff;
+    }
+    .dark-mode .sidebar {
+      background-color: #181818;
+    }
+    .dark-mode .sidebar a:hover {
+      background-color: #333;
+    }
+    .dark-mode .form-control {
+      background-color: #2c2c2c;
+      color: white;
+      border-color: #555;
+    }
+    .search-box {
+      width: 300px;
+    }
+    .dropdown-item:hover {
+      background-color: #f0f0f0;
+    }
+    .dark-mode .dropdown-item:hover {
+      background-color: #444;
+    }
+    .card-summary {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .card-summary .card {
+      flex: 1;
+      min-width: 200px;
+    }
+    .quick-links {
+      margin-top: 40px;
+    }
+    .quick-links h4 {
+      margin-bottom: 15px;
+    }
+    .quick-links .btn {
+      margin: 5px 10px 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h4 class="mb-4">Student Panel</h4>
+    <a href="#" onclick="loadPage('studash.html')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a onclick="loadPage('studentprofile.html')"><i class="bi bi-person-circle"></i> My Profile</a>
+    <a onclick="loadPage('enrollnewcourse.html')"><i class="bi bi-plus-circle"></i> Enroll in New Course</a>
+    <a onclick="loadPage('feespayment.html')"><i class="bi bi-credit-card"></i> Fees Payment</a>
+    <a onclick="loadPage('feedback.html')"><i class="bi bi-chat-dots"></i> Feedback</a>
+    <a onclick="loadPage('help.html')"><i class="bi bi-question-circle"></i> Help</a>
+  </div>
+  <div class="content w-100">
+    <nav class="navbar d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <h4 class="m-0">Dashboard</h4>
+        <input type="text" class="form-control search-box" placeholder="Search...">
+      </div>
+      <div class="d-flex align-items-center">
+        <button class="btn btn-light me-3" id="toggleThemeBtn">
+          <i id="themeIcon" class="bi bi-moon-fill"></i>
+        </button>
+        <button class="btn btn-light me-3">
+          <i class="bi bi-bell"></i>
+        </button>
+        <div class="dropdown">
+          <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img id="avatar" src="https://i.pravatar.cc/150?img=3" class="rounded-circle" alt="Avatar" width="30" height="30">
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="#" onclick="loadPage('studentprofile.html')" >View Profile</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadPage('Settings.html')">Settings</a></li>
+            <li><a class="dropdown-item" href="#" onclick="loadPage('help.html')">Help Center</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="p-3" id="main-content">
+      <h2>Welcome to Your Dashboard</h2>
+      <p>Select an option from the menu to continue.</p>
+      <div class="card-summary">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Total Courses Enrolled</h5>
+            <p class="card-text fs-4">5</p>
+          </div>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Pending Payments</h5>
+            <p class="card-text fs-4">₹2,000</p>
+          </div>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">New Notifications</h5>
+            <p class="card-text fs-4">3</p>
+          </div>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Feedback Submitted</h5>
+            <p class="card-text fs-4">2</p>
+          </div>
+        </div>
+      </div>
+      <div class="quick-links">
+        <h4>Quick Links</h4>
+        <button class="btn btn-outline-primary"><i class="bi bi-upload"></i> Submit Assignment</button>
+        <button class="btn btn-outline-success"><i class="bi bi-calendar-event"></i> View Timetable</button>
+        <button class="btn btn-outline-warning"><i class="bi bi-journal-check"></i> Exam Schedule</button>
+        <button class="btn btn-outline-danger"><i class="bi bi-book-half"></i> Course Materials</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+     function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.getElementById('themeIcon');
+      icon.classList.toggle('bi-sun-fill');
+      icon.classList.toggle('bi-moon-fill');
+    }
+
+    document.getElementById('toggleThemeBtn').addEventListener('click', toggleDarkMode);
+   
+
+    const avatar = document.getElementById('avatar');
+    if (!avatar.src || avatar.src.includes('placeholder')) {
+      const randomId = Math.floor(Math.random() * 70);
+      avatar.src = `https://i.pravatar.cc/150?img=${randomId}`;
+    }
+    function logout() {
+        sessionStorage.clear();
+        sessionStorage.setItem("loggedOut", "true");
+        window.location.href = "login.html";
+      }
+      function loadPage(page) {
+      fetch(`pages/${page}`)
+        .then((response) => response.text())
+        .then((data) => {
+          const container = document.getElementById("main-content");
+          container.innerHTML = data;
+
+          const scripts = container.querySelectorAll("script");
+          scripts.forEach((script) => {
+            const newScript = document.createElement("script");
+            if (script.src) {
+              newScript.src = script.src;
+            } else {
+              newScript.textContent = script.textContent;
+            }
+            document.body.appendChild(newScript);
+            script.remove(); 
+          });
+        })
+        .catch((err) => {
+          document.getElementById("main-content").innerHTML =
+            '<p class="text-danger">Failed to load content.</p>';
+          console.error(err);
+        });
+    }
+      
+  </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

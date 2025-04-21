@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - Student</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="card mx-auto shadow" style="max-width: 600px;">
+      <div class="card-header bg-primary text-white text-center">
+        <h3>My Profile</h3>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-4">
+          <img src="https://via.placeholder.com/100" class="rounded-circle" alt="Student Photo">
+        </div>
+        <table class="table table-borderless">
+          <tr>
+            <th>Name:</th>
+            <td id="studentName">Varad Waghmare</td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td id="studentEmail">varad@gmail.com</td>
+          </tr>
+          <tr>
+            <th>Phone:</th>
+            <td id="studentPhone">+91-1234567890</td>
+          </tr>
+          <tr>
+            <th>Enrolled Courses:</th>
+            <td id="studentCourses">Python Programming, Web Development</td>
+          </tr>
+          <tr>
+            <th>Fees Paid:</th>
+            <td id="studentFees">₹10,000</td>
+          </tr>
+        </table>
+        <div class="text-end">
+          <button class="btn btn-outline-primary btn-sm" onclick="editProfile()">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function editProfile() {
+      alert("Edit profile coming soon!");
+    }
+  </script>
+
+</body>
+</html>
